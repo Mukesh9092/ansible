@@ -1,19 +1,23 @@
 ---
 - name: Install RabbitMQ
-  yum:
+  ansible.builtin.yum:
     name: rabbitmq-server
     state: present
 
 - name: Stop RabbitMQ on non-SOT nodes
-  command: rabbitmqctl stop_app
+  ansible.builtin.command:
+    cmd: rabbitmqctl stop_app
   when: inventory_hostname != "app-node01"
+  changed_when: false
 
 - name: Join RabbitMQ cluster on non-SOT nodes
-  command: rabbitmqctl join_cluster rabbit@app-node01
+  ansible.builtin.command:
+    cmd: rabbitmqctl join_cluster rabbit@app-node01
   when: inventory_hostname != "app-node01"
+  changed_when: false
 
 - name: Start RabbitMQ
-  service:
+  ansible.builtin.service:
     name: rabbitmq-server
     state: started
     enabled: true
