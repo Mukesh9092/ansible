@@ -32,7 +32,7 @@
 - name: Ensure Morpheus reconfigure only runs if needed
   ansible.builtin.command: morpheus-ctl reconfigure
   when: morpheus_installation.stat.exists
-  changed_when: false
+  changed_when: false  # Ensure this command doesn't mark a change unnecessarily
   notify: Run Morpheus reconfigure
 
 # Handlers section
