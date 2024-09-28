@@ -1,0 +1,5 @@
+- name: Run Morpheus reconfigure
+  ansible.builtin.command:
+    cmd: morpheus-ctl reconfigure
+  changed_when: "'Reconfigured' in result.stdout"
+  register: result
