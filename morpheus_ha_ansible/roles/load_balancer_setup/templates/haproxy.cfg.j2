@@ -1,0 +1,27 @@
+global
+    log /dev/log local0
+    log /dev/log local1 notice
+    chroot /var/lib/haproxy
+    stats socket /run/haproxy/admin.sock mode 660 level admin
+    stats timeout 30s
+    user haproxy
+    group haproxy
+    daemon
+
+defaults
+    log     global
+    option  redispatch
+    retries 3
+    timeout connect 5s
+    timeout client  30s
+    timeout server  30s
+
+frontend morpheus
+    bind *:80
+    default_backend morpheus-backend
+
+backend morpheus-backend
+    balance roundrobin
+    server app-node01 192.168.104.01:80 check
+    server app-node02 192.168.104.02:80 check
+    server app-node03 192.168.104.03:80 check

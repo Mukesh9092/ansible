@@ -1,0 +1,19 @@
+---
+- name: Install RabbitMQ
+  yum:
+    name: rabbitmq-server
+    state: present
+
+- name: Stop RabbitMQ on non-SOT nodes
+  command: rabbitmqctl stop_app
+  when: inventory_hostname != "app-node01"
+
+- name: Join RabbitMQ cluster on non-SOT nodes
+  command: rabbitmqctl join_cluster rabbit@app-node01
+  when: inventory_hostname != "app-node01"
+
+- name: Start RabbitMQ
+  service:
+    name: rabbitmq-server
+    state: started
+    enabled: true

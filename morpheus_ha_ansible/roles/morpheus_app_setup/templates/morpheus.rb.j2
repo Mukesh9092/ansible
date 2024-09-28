@@ -1,0 +1,11 @@
+appliance_url 'https://morpheus.localdomain'
+elasticsearch['es_hosts'] = {'192.168.104.01' => 9200, '192.168.104.02' => 9200, '192.168.104.03' => 9200}
+elasticsearch['node_name'] = '{{ ansible_hostname }}'
+elasticsearch['host'] = '0.0.0.0'
+rabbitmq['host'] = '0.0.0.0'
+rabbitmq['nodename'] = 'rabbit@{{ ansible_hostname }}'
+mysql['enable'] = false
+mysql['host'] = '127.0.0.1'
+mysql['morpheus_db'] = 'morpheus'
+mysql['morpheus_db_user'] = 'morpheus'
+mysql['morpheus_password'] = '{{ mysql_password }}'

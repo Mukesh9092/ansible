@@ -1,0 +1,26 @@
+---
+- name: Create Morpheus installation directory
+  file:
+    path: /var/opt/morpheus/morpheus-ui
+    state: directory
+    mode: '0755'
+
+- name: Download and install Morpheus
+  get_url:
+    url: "https://example/path/morpheus-appliance-ver-1.el8.x86_64.rpm"
+    dest: "/tmp/morpheus-appliance.rpm"
+  when: ansible_distribution == "CentOS"
+
+- name: Install Morpheus package
+  yum:
+    name: /tmp/morpheus-appliance.rpm
+    state: present
+
+- name: Edit Morpheus configuration
+  template:
+    src: morpheus.rb.j2
+    dest: /etc/morpheus/morpheus.rb
+    mode: '0644'
+
+- name: Run Morpheus reconfigure
+  command: morpheus-ctl reconfigure

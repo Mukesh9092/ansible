@@ -1,0 +1,16 @@
+---
+- name: HA Morpheus Deployment
+  hosts: all            # Specify target hosts or group
+  become: true
+  gather_facts: yes      # Optional, depends on your use case
+
+  vars_files:
+    - vars/main.yml 
+    - vault/secrets.yml
+
+  roles:
+    - { role: mysql_setup, when: "'db_nodes' in group_names" }
+    - { role: morpheus_app_setup, when: "'app_nodes' in group_names" }
+    - { role: rabbitmq_cluster_setup, when: "'app_nodes' in group_names" }
+    - { role: elasticsearch_cluster_setup, when: "'app_nodes' in group_names" }
+    - { role: load_balancer_setup, when: "'load_balancer' in group_names" }

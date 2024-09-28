@@ -1,0 +1,5 @@
+cluster.name: morpheus-cluster
+node.name: "{{ ansible_hostname }}"
+network.host: 0.0.0.0
+discovery.seed_hosts: ["192.168.104.01", "192.168.104.02", "192.168.104.03"]
+cluster.initial_master_nodes: ["192.168.104.01", "192.168.104.02", "192.168.104.03"]
