@@ -15,22 +15,29 @@
   ansible.builtin.dnf:
     name: /tmp/morpheus-appliance.rpm
     state: present
+  notify: Run Morpheus reconfigure
 
 - name: Edit Morpheus configuration
   ansible.builtin.template:
     src: morpheus.rb.j2
     dest: /etc/morpheus/morpheus.rb
     mode: '0644'
+  notify: Run Morpheus reconfigure
 
 - name: Check if Morpheus installation directory exists
   ansible.builtin.stat:
     path: /var/opt/morpheus/morpheus-ui
   register: morpheus_installation
 
-- name: Run Morpheus reconfigure if the directory exists
-  ansible.builtin.command: morpheus-ctl reconfigure
-  when: morpheus_installation.stat.exists
-
 - name: Ensure Morpheus reconfigure only runs if needed
   ansible.builtin.command: morpheus-ctl reconfigure
-  when: morpheus_installation.changed
+  when: morpheus_installation.stat.exists
+  changed_when: false
+  notify: Run Morpheus reconfigure
+
+# Handlers section
+handlers:
+  - name: Run Morpheus reconfigure
+    ansible.builtin.command: morpheus-ctl reconfigure
+    changed_when: "'Reconfigured' in result.stdout"
+    register: result
