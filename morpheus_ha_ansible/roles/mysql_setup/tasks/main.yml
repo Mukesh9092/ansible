@@ -1,6 +1,6 @@
 ---
 - name: Install MySQL 8.0
-  ansible.builtin.yum:
+  ansible.builtin.dnf:
     name: mysql-server
     state: present
 
