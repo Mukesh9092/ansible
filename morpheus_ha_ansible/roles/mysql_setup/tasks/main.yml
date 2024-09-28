@@ -1,29 +1,33 @@
 ---
 - name: Install MySQL 8.0
-  yum:
+  ansible.builtin.yum:
     name: mysql-server
     state: present
+
 - name: Start and enable MySQL service
-  service:
+  ansible.builtin.service:
     name: mysqld
     state: started
     enabled: true
+
 - name: Create Morpheus database
-  mysql_db:
+  community.mysql.mysql_db:
     name: morpheus
     state: present
     encoding: utf8mb4
     collation: utf8mb4_general_ci
+
 - name: Create MySQL user for Morpheus
-  mysql_user:
+  community.mysql.mysql_user:
     name: morpheus
     password: "{{ mysql_password }}"
     priv: "morpheus.*:ALL,SELECT,PROCESS,SHOW DATABASES,RELOAD"
     host: "%"
     state: present
+
 - name: Flush MySQL privileges
-  mysql_user:
+  community.mysql.mysql_user:
     name: root
     host: localhost
     state: present
-    flush_privileges: true
+    update_password: on_create
