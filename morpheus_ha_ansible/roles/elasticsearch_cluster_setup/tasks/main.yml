@@ -1,16 +1,17 @@
 ---
 - name: Install Elasticsearch
-  yum:
+  ansible.builtin.yum:
     name: elasticsearch
     state: present
 
 - name: Configure Elasticsearch
-  template:
+  ansible.builtin.template:
     src: elasticsearch.yml.j2
     dest: /etc/elasticsearch/elasticsearch.yml
+    mode: '0644'  # Setting file permissions
 
 - name: Start Elasticsearch
-  service:
+  ansible.builtin.service:
     name: elasticsearch
     state: started
     enabled: true
