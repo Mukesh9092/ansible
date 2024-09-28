@@ -9,6 +9,7 @@
   ansible.builtin.get_url:
     url: "https://example/path/morpheus-appliance-ver-1.el8.x86_64.rpm"
     dest: "/tmp/morpheus-appliance.rpm"
+    mode: '0644'  # Set permissions for the downloaded file
   when: ansible_distribution == "CentOS"
 
 - name: Install Morpheus package
@@ -24,3 +25,10 @@
 
 - name: Run Morpheus reconfigure
   ansible.builtin.command: morpheus-ctl reconfigure
+  when: ansible.builtin.stat:
+    path: /var/opt/morpheus/morpheus-ui
+  register: morpheus_installation
+
+- name: Ensure Morpheus reconfigure only runs if needed
+  ansible.builtin.command: morpheus-ctl reconfigure
+  when: morpheus_installation.changed
