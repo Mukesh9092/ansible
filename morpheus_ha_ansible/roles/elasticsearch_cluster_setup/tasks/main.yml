@@ -1,16 +1,17 @@
 ---
-- name: HA Morpheus Deployment
-  hosts: all            # Specify target hosts or group
-  become: true
-  gather_facts: true     # Optional, depends on your use case
+- name: Install Elasticsearch
+  ansible.builtin.yum:
+    name: elasticsearch
+    state: present
 
-  vars_files:
-    - vars/main.yml
-    - vault/secrets.yml
+- name: Configure Elasticsearch
+  ansible.builtin.template:
+    src: elasticsearch.yml.j2
+    dest: /etc/elasticsearch/elasticsearch.yml
+    mode: '0644'  # Setting file permissions
 
-  roles:
-    - { role: mysql_setup, when: "'db_nodes' in group_names" }
-    - { role: morpheus_app_setup, when: "'app_nodes' in group_names" }
-    - { role: rabbitmq_cluster_setup, when: "'app_nodes' in group_names" }
-    - { role: elasticsearch_cluster_setup, when: "'app_nodes' in group_names" }
-    - { role: load_balancer_setup, when: "'load_balancer' in group_names" }
+- name: Start Elasticsearch
+  ansible.builtin.service:
+    name: elasticsearch
+    state: started
+    enabled: true
