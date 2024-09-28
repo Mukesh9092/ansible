@@ -12,7 +12,7 @@
   when: ansible_distribution == "CentOS"
 
 - name: Install Morpheus package
-  ansible.builtin.yum:
+  ansible.builtin.dnf:
     name: /tmp/morpheus-appliance.rpm
     state: present
 
