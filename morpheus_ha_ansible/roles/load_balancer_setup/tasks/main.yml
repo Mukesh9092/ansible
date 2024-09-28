@@ -1,16 +1,17 @@
 ---
 - name: Install and configure Load Balancer (e.g., HAProxy)
-  yum:
+  ansible.builtin.yum:
     name: haproxy
     state: present
 
 - name: Configure HAProxy for Morpheus
-  template:
+  ansible.builtin.template:
     src: haproxy.cfg.j2
     dest: /etc/haproxy/haproxy.cfg
+    mode: '0644'  # Set appropriate file permissions
 
 - name: Start HAProxy
-  service:
+  ansible.builtin.service:
     name: haproxy
     state: started
     enabled: true
