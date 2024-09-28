@@ -1,4 +1,3 @@
----
 - name: Create Morpheus installation directory
   ansible.builtin.file:
     path: /var/opt/morpheus/morpheus-ui
@@ -23,11 +22,14 @@
     dest: /etc/morpheus/morpheus.rb
     mode: '0644'
 
-- name: Run Morpheus reconfigure
-  ansible.builtin.command: morpheus-ctl reconfigure
-  when: ansible.builtin.stat:
+- name: Check if Morpheus installation directory exists
+  ansible.builtin.stat:
     path: /var/opt/morpheus/morpheus-ui
   register: morpheus_installation
+
+- name: Run Morpheus reconfigure if the directory exists
+  ansible.builtin.command: morpheus-ctl reconfigure
+  when: morpheus_installation.stat.exists
 
 - name: Ensure Morpheus reconfigure only runs if needed
   ansible.builtin.command: morpheus-ctl reconfigure
