@@ -5,7 +5,7 @@
   gather_facts: true     # Optional, depends on your use case
   
   vars_files:
-    - vars/main.yml 
+    - vars/main.yml
     - vault/secrets.yml
 
   roles:
