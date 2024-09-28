@@ -34,11 +34,3 @@
     cmd: morpheus-ctl reconfigure
   when: morpheus_installation.stat.exists
   changed_when: false  # Ensures this task doesn't always trigger a change
-
-# Handlers section
-handlers:
-  - name: Run Morpheus reconfigure
-    ansible.builtin.command:
-      cmd: morpheus-ctl reconfigure
-    changed_when: "'Reconfigured' in result.stdout"
-    register: result
